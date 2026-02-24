@@ -9,6 +9,11 @@ const users = [
     name: "Saket",
     email: "saket@myemail.com",
   },
+  {
+    id: 2,
+    name: "Saket2",
+    email: "saket2@myemail.com",
+  },
 ];
 
 // main server logic here -_-
@@ -68,8 +73,25 @@ const server = http.createServer((req, res) => {
     res.statusCode = 200;
     res.end("Edit User");
   } else if (url.startsWith("/users/") && method === "DELETE") {
+    const id = url.split("/")[2];
+
+    const userIndex = users.findIndex((user) => user.id == id);
+
+    if (userIndex == -1) {
+      res.statusCode = 400;
+      console.log(`User id: ${id} not found`);
+      res.end(`User id: ${id} not found`);
+      return;
+    }
+
+    // deleting that data with userIndex in the users
+    // splice move to give index then delete 1 element from there
+    users.splice(userIndex, 1);
+
     res.statusCode = 200;
-    res.end("Delete User");
+    // res.end("Delete User");
+    console.log(`User id: ${id} deleted sucessfully`);
+    res.end(`User id: ${id} deleted sucessfully`);
   } else {
     res.statusCode = 404;
     res.end("Error: API not found");
